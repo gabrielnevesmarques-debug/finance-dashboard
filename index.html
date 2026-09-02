@@ -76,6 +76,14 @@
       <section id="transactions" class="panel">
         <div class="panel-header transactions-header">
           <div><h2>Últimas transações</h2><p>Gerencie seus lançamentos</p></div>
+          <button id="exportCsv" class="secondary-btn" type="button">↓ Exportar CSV</button>
+        </div>
+
+        <div class="transaction-toolbar">
+          <div class="search-box">
+            <span aria-hidden="true">⌕</span>
+            <input id="searchInput" type="search" placeholder="Buscar transação..." aria-label="Buscar transação">
+          </div>
           <div class="filters">
             <select id="typeFilter" aria-label="Filtrar por tipo">
               <option value="all">Todos</option>
@@ -87,6 +95,7 @@
             </select>
           </div>
         </div>
+
         <div id="transactionList" class="transaction-list"></div>
       </section>
 
