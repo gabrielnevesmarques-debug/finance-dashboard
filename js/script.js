@@ -142,18 +142,26 @@ function updateFilters() {
   }
 }
 
-function renderTransactions() {
+function getFilteredTransactions() {
   const selectedType = $('#typeFilter').value;
   const selectedCategory = $('#categoryFilter').value;
+  const search = $('#searchInput').value.trim().toLowerCase();
 
-  const filtered = [...transactions]
+  return [...transactions]
     .filter((transaction) => {
       const matchesType = selectedType === 'all' || transaction.type === selectedType;
       const matchesCategory = selectedCategory === 'all' || transaction.category === selectedCategory;
+      const matchesSearch = !search ||
+        transaction.description.toLowerCase().includes(search) ||
+        transaction.category.toLowerCase().includes(search);
 
-      return matchesType && matchesCategory;
+      return matchesType && matchesCategory && matchesSearch;
     })
     .sort((a, b) => `${b.date}${b.id}`.localeCompare(`${a.date}${a.id}`));
+}
+
+function renderTransactions() {
+  const filtered = getFilteredTransactions();
 
   $('#transactionList').innerHTML = filtered.length
     ? filtered.map((transaction) => `
@@ -287,9 +295,41 @@ function showToast(message, type = 'success') {
   }, 2500);
 }
 
+function exportCSV() {
+  if (!transactions.length) {
+    showToast('Não há transações para exportar.', 'error');
+    return;
+  }
+
+  const headers = ['Descrição', 'Valor', 'Tipo', 'Categoria', 'Data'];
+  const rows = transactions.map((transaction) => [
+    transaction.description,
+    transaction.amount.toFixed(2).replace('.', ','),
+    transaction.type === 'income' ? 'Receita' : 'Despesa',
+    transaction.category,
+    transaction.date
+  ]);
+
+  const csv = [headers, ...rows]
+    .map((row) => row.map((value) => `"${String(value).replace(/"/g, '""')}"`).join(';'))
+    .join('\n');
+
+  const blob = new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+
+  link.href = url;
+  link.download = 'fintrack-transacoes.csv';
+  link.click();
+  URL.revokeObjectURL(url);
+
+  showToast('CSV exportado com sucesso!');
+}
+
 $('#openModal').addEventListener('click', () => openModal());
 $('#closeModal').addEventListener('click', closeModal);
 $('#closeModalButton').addEventListener('click', closeModal);
+$('#exportCsv').addEventListener('click', exportCSV);
 
 $('#transactionForm').addEventListener('submit', (event) => {
   event.preventDefault();
@@ -356,6 +396,7 @@ $('#transactionList').addEventListener('click', (event) => {
 
 $('#typeFilter').addEventListener('change', renderTransactions);
 $('#categoryFilter').addEventListener('change', renderTransactions);
+$('#searchInput').addEventListener('input', renderTransactions);
 $('#chartPeriod').addEventListener('change', renderChart);
 
 $('#themeToggle').addEventListener('click', () => {
