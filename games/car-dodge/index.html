@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Car Dodge - jogo de desviar de carros feito com HTML, CSS e JavaScript.">
+  <title>Car Dodge</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="game-shell">
+    <header class="game-header">
+      <div>
+        <p class="eyebrow">JOGO DE NAVEGADOR</p>
+        <h1>Car Dodge</h1>
+      </div>
+      <div class="score-box">
+        <span>PONTOS</span>
+        <strong id="score">0</strong>
+      </div>
+    </header>
+
+    <section class="game-card">
+      <canvas id="gameCanvas" width="400" height="600" aria-label="Área do jogo"></canvas>
+
+      <div id="startScreen" class="overlay">
+        <div class="overlay-content">
+          <span class="car-icon">🚗</span>
+          <h2>Pronto para dirigir?</h2>
+          <p>Desvie dos carros e sobreviva o máximo que conseguir.</p>
+          <button id="startButton">Começar jogo</button>
+          <small>Use ← → ou A / D para movimentar</small>
+        </div>
+      </div>
+
+      <div id="gameOverScreen" class="overlay hidden">
+        <div class="overlay-content">
+          <span class="car-icon">💥</span>
+          <h2>Fim de jogo!</h2>
+          <p>Sua pontuação: <strong id="finalScore">0</strong></p>
+          <p>Recorde: <strong id="highScore">0</strong></p>
+          <button id="restartButton">Jogar novamente</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="controls">
+      <span>← → / A D</span>
+      <span>Desvie dos carros</span>
+      <span>🏆 Recorde salvo automaticamente</span>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
